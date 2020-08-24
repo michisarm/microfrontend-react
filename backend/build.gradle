@@ -79,7 +79,8 @@ task removeBuildResource(type: Delete) {
 
 
 yarnInstall.dependsOn removeBuildResource
-yarnBuild.dependsOn yarnInstall
-buildWith.dependsOn yarnBuild
+//yarnBuild.dependsOn yarnInstall
+//buildWith.dependsOn yarnBuild
+buildWith
 buildWith.finalizedBy(build)
 
