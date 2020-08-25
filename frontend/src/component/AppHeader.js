@@ -5,7 +5,7 @@ import './AppHeader.css';
 const AppHeader = () => (
   <header>
     <div className="center-column">
-      <h1>navi</h1>
+      <h1>Microfrontend</h1>
     </div>
     <nav>
       <ol className="center-column">

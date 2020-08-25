@@ -22,4 +22,4 @@ jwt:
   expiration-sec: 7776000
 
 server:
-  port: 8080
+  port: 80

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import MicroFrontend from './MicroFrontendHook';
 import AppHeader from './component/AppHeader';
 
@@ -22,9 +22,8 @@ const App = () => (
       <AppHeader />
       <Switch>
         <Route exact path="/" component={App1} />
-        <Route exact path="/app1" component={App1} />
-        <Route exact path="/app2" component={App2} />
-        <Route exact path="/app2/*" component={App2} />
+        <Route exact path="/app1*" component={App1} />
+        <Route exact path="/app2*" component={App2} />
       </Switch>
     </React.Fragment>
   </Router>

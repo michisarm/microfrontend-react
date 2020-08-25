@@ -16,59 +16,39 @@ const MicroFrontendHook = ({ name, host, history }) => {
     fetch(`${host}/asset-manifest.json`)
       .then(res => res.json())
       .then(manifest => {
-        //css
-        // const promisesCss = Object.keys(manifest['files'])
-        //   .filter(key => key.endsWith('.css'))
-        //   .reduce((sum, key) => {
-        //     sum.push(
-        //       new Promise(resolve => {
-        //         let path;
-        //         if (host.indexOf('localhost') > -1){
-        //           path = `${host}${manifest['files'][key]}`;
-        //         }else{
-        //           path = `${manifest['files'][key]}`;
-        //         }
-        //         const link = document.createElement('link');
-        //         if (key === 'main.css') {
-        //           link.id = scriptId+"-CSS";
-        //         }
-        //         link.onload = () => {
-        //           resolve();
-        //         };
-        //         link.href = path;
-        //         link.ref = 'stylesheet';
-        //         document.head.appendChild(link);
-        //       })
-        //     );
-        //     return sum;
-        //   }, []);
-        //js
         const promises = Object.keys(manifest['files'])
-          .filter(key => key.endsWith('.js'))
+          .filter(key => key.endsWith('.js') || key.endsWith('.css'))
           .reduce((sum, key) => {
-            sum.push(
-              new Promise(resolve => {
-                let path;
-                if (host.indexOf('localhost') > -1){
-                  path = `${host}${manifest['files'][key]}`;
-                }else{
-                  path = `${manifest['files'][key]}`;
-                }
-                const script = document.createElement('script');
-                if (key === 'main.js') {
-                  script.id = scriptId;
-                }
-                script.onload = () => {
+            if(key.endsWith('.js')){
+              sum.push(
+                new Promise(resolve => {
+                  const path = `${host}${manifest['files'][key]}`;
+                  const script = document.createElement('script');
+                  if (key === 'main.js') {
+                    script.id = scriptId;
+                  }
+                  script.onload = () => {
+                    resolve();
+                  };
+                  script.src = path;
+                  document.head.appendChild(script);
+                })
+              );
+              return sum;
+            }else if(key.endsWith('.css')){
+              sum.push(
+                new Promise(resolve => {
+                  const path = `${host}${manifest['files'][key]}`;
+                  const link = document.createElement('link');
+                  link.href = path;
+                  link.rel = 'stylesheet';
+                  document.head.appendChild(link);
                   resolve();
-                };
-                script.src = path;
-                document.head.appendChild(script);
-              })
-            );
-            return sum;
+                })
+              );
+              return sum;
+            }
           }, []);
-        
-        // const promises = [promisesCss, promisesJs];
         Promise.allSettled(promises).then(() => {
           renderMicroFrontend();
         });
